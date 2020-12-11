@@ -12,6 +12,10 @@
 # gathers facts/state of machine before running the playbook
   become: true
 # become is used as the root permissions to perform tasks
+  vars:
+    db_ip:
+      DB_HOST: 111.111.111.3
+  environment: "{{ db_ip }}"
 
   tasks:
     - name: Syncing /app directory
@@ -44,7 +48,13 @@
         name: nodejs
         state: present
         update_cache: yes
+#    - debug: 
+#        msg: "This is the DB_HOST ip {{ db_ip.stdout }}"
 
+    - name: manually checking DB_HOST
+      shell: |
+        touch /home/ubuntu/db_checking 
+        echo $DB_HOST >> /home/ubuntu/db_checking
 
     - name: Install pm2
       npm:

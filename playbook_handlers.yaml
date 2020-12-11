@@ -1,0 +1,24 @@
+# This file will show handlers being used
+
+---
+
+- hosts: host_b
+# used to define where this playbook will run
+
+  gather_facts: yes
+# gathers facts/state of machine before running the playbook
+  become: true
+# become is used as the root permissions to perform tasks
+
+  tasks:
+    - name: Install nginx
+      package:
+        name: nginx
+        state: present
+      notify: Start nginx
+
+  handlers:
+       - name: Start nginx
+         service:
+           name: nginx
+           state: restarted
