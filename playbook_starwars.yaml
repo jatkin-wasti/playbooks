@@ -1,0 +1,13 @@
+---
+- name: star wars movie night
+  hosts: host_a
+  gather_facts: yes
+  become: true
+
+  tasks:
+    - name: play movie
+      telnet:
+        user: user
+        pass: pass
+        command:
+          - telnet towel.blinkenlights.nl
