@@ -14,7 +14,7 @@
 # become is used as the root permissions to perform tasks
   vars:
     db_ip:
-      DB_HOST: 111.111.111.3
+      DB_HOST: 172.31.34.36
   environment: "{{ db_ip }}"
 
   tasks:
@@ -48,13 +48,14 @@
         name: nodejs
         state: present
         update_cache: yes
-#    - debug: 
-#        msg: "This is the DB_HOST ip {{ db_ip.stdout }}"
 
-    - name: manually checking DB_HOST
+    - name: set up DB_HOST variable
+      become: yes
+      become_user: ubuntu
       shell: |
-        touch /home/ubuntu/db_checking 
-        echo $DB_HOST >> /home/ubuntu/db_checking
+          echo "export DB_HOST = $DB_HOST" >> .bashrc
+      args:
+        chdir: /home/ubuntu
 
     - name: Install pm2
       npm:
@@ -105,7 +106,7 @@
         enabled: yes
 
     - name: Execute a command using the shell module
-      become: true
+      become: yes
       become_user: ubuntu
       shell: pm2 start app.js -f
       args:

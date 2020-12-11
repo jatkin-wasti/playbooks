@@ -14,11 +14,11 @@
 # become is used as the root permissions to perform tasks
 
   tasks:
-    - name: Retrieving key
-      become: yes
-      shell: |
-          apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv D68FA50FEA312927
-          echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+    - name: Import public key
+      apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=D68FA50FEA312927 state=present
+
+    - name: Adding the MongoDB repository
+      apt_repository: repo="deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" state=present
 
     - name: Update apt-get repo and cache
       apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
@@ -29,6 +29,11 @@
         state: present
         update_cache: yes
 
+    - name: unmasking mongod
+      become: yes
+      become_user: root
+      shell: systemctl unmask mongod
+
     - name: start and enable mongodb
       service:
         name: mongodb
@@ -38,6 +43,7 @@
     - name: edit mongod config file
       become: yes
       become_user: root
-      shell: sed -i 's/127.0.0.1/0.0.0.0/g' mongodb.conf
+      shell: sed -i 's/127.0.0.1/0.0.0.0/g' mongod.conf
       args:
         chdir: /etc
+
