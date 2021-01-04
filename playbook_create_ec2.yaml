@@ -7,7 +7,7 @@
     key_name: eng74-jamie-aws-key
     region: eu-west-1
     image: ami-0dc8d444ee2a42d8a
-    id: "Jamie Ansible ec2 lesson"
+    id: "Newer Ansible EC2"
     sec_group: sg-02ba23947a7c8d0f5
     subnet_id: subnet-00ac052b1e40c0164
     # ansible_python_interpreter: /urs/bin/python3
@@ -53,6 +53,6 @@
         wait: true
         count: 1
         instance_tags: 
-          Name: eng74-jamie-ansible-ec2
+          Name: eng74-jamie-ansible-ec2-new
 
   tags: ['never', 'create_ec2']
